@@ -27,10 +27,7 @@ const app = express();
 //Add Middlewares
 
 //JSON, HELMET, CORS, XSS-CLEAN & EXPRESS-RATE-LIMIT
-app.use(express.json());
-app.use(helmet());
-app.use(cors());
-app.use(xssClean());
+app.set("trust proxy", 1);
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -38,8 +35,13 @@ app.use(
   })
 );
 
+app.use(express.json());
+app.use(helmet());
+app.use(cors());
+app.use(xssClean());
+
 //App Default Route
-app.use(express.static("../Client"));
+app.use(express.static("./Client"));
 //Routes
 app.use("/api/v1/jobs", authMiddleware, jobRoutes);
 app.use("/api/v1/auth", authRoutes);
