@@ -14,6 +14,11 @@ const notFound = require("./middlewares/notFound");
 const errorHandlerMiddleware = require("./middlewares/errorHandler");
 const authMiddleware = require("./middlewares/auth");
 
+//Swagger UI Documenation and YAML
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDoc = YAML.load("./swagger.yaml");
+
 //Route files
 const jobRoutes = require("./routes/jobs");
 const authRoutes = require("./routes/auth");
@@ -42,6 +47,10 @@ app.use(xssClean());
 
 //App Default Route
 app.use(express.static("./Client"));
+
+//Swagger Doc
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+
 //Routes
 app.use("/api/v1/jobs", authMiddleware, jobRoutes);
 app.use("/api/v1/auth", authRoutes);

@@ -1,0 +1,260 @@
+openapi: 3.0.0
+info:
+  title: Jobs-API
+  description: "This template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests."
+  contact: {}
+  version: "1.0"
+servers:
+  - url: https://jobs-api-0zdr.onrender.com/api/v1
+    variables: {}
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register
+      operationId: Register
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/RegisterRequest"
+                - example:
+                    name: golu
+                    email: golu@email.com
+                    password: secret12345
+            example:
+              name: golu
+              email: golu@email.com
+              password: secret12345
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      operationId: Login
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/LoginRequest"
+                - example:
+                    email: golu@email.com
+                    password: 12345secret
+            example:
+              email: golu@email.com
+              password: 12345secret
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /jobs:
+    get:
+      tags:
+        - Jobs
+      summary: Get All Jobs
+      description: >-
+        This is a GET request and it is used to "get" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).
+
+
+        A successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data.
+      operationId: GetAllJobs
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+    post:
+      tags:
+        - Jobs
+      summary: Create Job
+      description: >-
+        This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created` response code.
+      operationId: CreateJob
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/CreateJobRequest"
+                - example:
+                    company: HackerRank
+                    position: Solutions Engineer
+            example:
+              company: HackerRank
+              position: Solutions Engineer
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /jobs/{id}:
+    get:
+      tags:
+        - Jobs
+      summary: Get Job by ID
+      operationId: GetJob
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Job ID
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+    patch:
+      tags:
+        - Jobs
+      summary: Update job by ID
+      description: >-
+        This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).
+
+
+        A successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code.
+      operationId: Updatejob
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Job ID
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/UpdatejobRequest"
+                - example:
+                    status: declined
+            example:
+              status: declined
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+    delete:
+      tags:
+        - Jobs
+      summary: Delete job by ID
+      description: >-
+        This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).
+
+
+        A successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code.
+      operationId: Deletejob
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Job ID
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+components:
+  schemas:
+    RegisterRequest:
+      title: RegisterRequest
+      required:
+        - name
+        - email
+        - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: golu
+        email: golu@email.com
+        password: secret12345
+    LoginRequest:
+      title: LoginRequest
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: golu@email.com
+        password: 12345secret
+    CreateJobRequest:
+      title: CreateJobRequest
+      required:
+        - company
+        - position
+      type: object
+      properties:
+        company:
+          type: string
+        position:
+          type: string
+      example:
+        company: HackerRank
+        position: Solutions Engineer
+    UpdatejobRequest:
+      title: UpdatejobRequest
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          type: string
+      example:
+        status: declined
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
