@@ -1,4 +1,5 @@
 //Dependencies
+const path = require("path");
 const express = require("express");
 require("dotenv").config();
 require("express-async-errors");
@@ -7,17 +8,17 @@ require("express-async-errors");
 const helmet = require("helmet");
 const cors = require("cors");
 const xssClean = require("xss-clean");
-const { rateLimit } = require("express-rate-limit");
+// const { rateLimit } = require("express-rate-limit");
 
 //Middleware files
 const notFound = require("./middlewares/notFound");
 const errorHandlerMiddleware = require("./middlewares/errorHandler");
 const authMiddleware = require("./middlewares/auth");
-
+//const testUserMiddleware = require("./middlewares/testUser");
 //Swagger UI Documenation and YAML
-const swaggerUI = require("swagger-ui-express");
-const YAML = require("yamljs");
-const swaggerDoc = YAML.load("./swagger.yaml");
+// const swaggerUI = require("swagger-ui-express");
+// const YAML = require("yamljs");
+// const swaggerDoc = YAML.load("./swagger.yaml");
 
 //Route files
 const jobRoutes = require("./routes/jobs");
@@ -32,13 +33,13 @@ const app = express();
 //Add Middlewares
 
 //JSON, HELMET, CORS, XSS-CLEAN & EXPRESS-RATE-LIMIT
-app.set("trust proxy", 1);
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: 100,
-  })
-);
+app.set("trust proxy", 1); //Number of proxies between user and server.
+// app.use(
+//   rateLimit({
+//     windowMs: 15 * 60 * 1000, // 15 minutes
+//     limit: 100,
+//   })
+// );
 
 app.use(express.json());
 app.use(helmet());
@@ -46,14 +47,19 @@ app.use(cors());
 app.use(xssClean());
 
 //App Default Route
-app.use(express.static("./Client"));
+app.use(express.static("./client/build"));
 
 //Swagger Doc
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+//app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
 //Routes
 app.use("/api/v1/jobs", authMiddleware, jobRoutes);
 app.use("/api/v1/auth", authRoutes);
+
+app.get("*", (req, res) => {
+  //res.send("Hello World");
+  res.sendFile(path.resolve(__dirname, "./client/build/index.html"));
+});
 
 //Not Found and Error Handler
 app.use(notFound);

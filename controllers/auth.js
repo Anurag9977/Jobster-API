@@ -10,8 +10,11 @@ const register = async (req, res) => {
   res.status(StatusCodes.CREATED).json({
     user: {
       name: newUser.name,
+      email: newUser.email,
+      lastName: newUser.lastName,
+      location: newUser.location,
+      token,
     },
-    token,
   });
 };
 
@@ -39,8 +42,46 @@ const login = async (req, res) => {
   res.status(StatusCodes.OK).json({
     user: {
       name: findUser.name,
+      email: findUser.email,
+      lastName: findUser.lastName,
+      location: findUser.location,
+      token,
     },
-    token,
   });
 };
-module.exports = { register, login };
+
+const updateUser = async (req, res) => {
+  const {
+    userDetails: { userID },
+    body: { name, email, lastName, location },
+  } = req;
+  if (!name || !email || !lastName || !location) {
+    throw new badRequestError("Please provide all the details");
+  }
+  const updateUser = await user.findOneAndUpdate(
+    {
+      _id: userID,
+    },
+    {
+      name,
+      email,
+      lastName,
+      location,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  const token = updateUser.createJWT();
+  return res.status(StatusCodes.OK).json({
+    user: {
+      name: updateUser.name,
+      location: updateUser.location,
+      email: updateUser.email,
+      lastName: updateUser.lastName,
+      token,
+    },
+  });
+};
+module.exports = { register, login, updateUser };
