@@ -127,9 +127,9 @@ const getAllJobs = async (req, res) => {
   const totalJobs = await Job.countDocuments({ ...queryObject });
   const numOfPages = Math.ceil(totalJobs / limit);
 
-  if (!jobs.length) {
-    throw new notFoundError("No jobs found");
-  }
+  // if (!jobs.length) {
+  //   throw new notFoundError("No jobs found");
+  // }
   res.status(StatusCodes.OK).json({ jobs, numOfPages, totalJobs });
 };
 
